@@ -21,6 +21,8 @@ This document shows the description of how to install Ansible in a simple way
 > 
 >For Windows, you may be required to enable virtualization technology from the BIOS
 
+* Requires a control machine
+* Requires distribution of CentOs 7 will be used
 
 
 
