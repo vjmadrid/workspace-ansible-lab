@@ -1,0 +1,7 @@
+---
+- name: Create Empty File 'example-txt'
+  hosts: all_targets
+  become: true
+  tasks:
+  - name: Create Empty File
+      file: path=/home/ansible/example.txt state=touch

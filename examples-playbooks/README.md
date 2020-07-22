@@ -47,14 +47,19 @@ Step to follow:
 - name: Print Hellow World
   hosts: all_targets
   tasks:
-    - debug:
-      msg: Hello World!
+  - debug:
+      msg: "Hello World!"
 ```
 
 * Execute the following command
 
 ```bash
-ansible-playbook -i inventory.txt playbooks/basic-hello-world.yml
+ansible-playbook -i inventary.txt  playbooks/basic-hello-world.yml --syntax-check
+
+# Check
+ansible-playbook -i inventary.txt  playbooks/basic-hello-world.yml --check
+
+ansible-playbook -i inventary.txt playbooks/basic-hello-world.yml
 ```
 
 
