@@ -12,9 +12,7 @@ Step to follow:
 * [Add Ansible User](https://github.com/vjmadrid/workspace-ansible-lab/blob/master/infrastructure/doc/README-add-ansible-user.md)
 * [Add Ansible User](https://github.com/vjmadrid/workspace-ansible-lab/blob/master/infrastructure/doc/README-add-ansible-user.md)
 * [Configure Passwordless](https://github.com/vjmadrid/workspace-ansible-lab/blob/master/infrastructure/doc/README-configure-passwordless-ssh.md)
-
-
-
+* [Install Git](https://github.com/vjmadrid/workspace-ansible-lab/blob/master/infrastructure/doc/README-install-git.md)
 
 
 
