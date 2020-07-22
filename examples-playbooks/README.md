@@ -22,6 +22,7 @@ Define which elements are necessary to use the examples
 
 * Basic Playbook
 * File Playbook
+* User Playbook
 
 
 
@@ -44,7 +45,7 @@ Step to follow:
       msg: "Hello World!"
 ```
 
-* Execute the following command
+* Execute the following command (examples-playbooks/)
 
 ```bash
 # Syntax-check
@@ -73,11 +74,12 @@ Step to follow:
       msg: "Hello World!"
 ```
 
-* Execute the following command
+* Execute the following command (examples-playbooks/)
 
 ```bash
 ansible-playbook -i inventary.txt playbooks/basic-print-facts.yml
 ```
+
 
 
 
@@ -97,14 +99,108 @@ Step to follow:
   become: true
   tasks:
   - name: Create Empty File
-      file: path=/home/ansible/example.txt state=touch
+    file:
+        path: "/home/ansible/example.txt"
+        state: touch
 ```
 
-* Execute the following command
+* Execute the following command (examples-playbooks/)
 
 ```bash
-ansible-playbook -i inventary.txt playbooks/basic-print-facts.yml
+ansible-playbook -i inventary.txt playbooks/file-create-empty-file.yml
 ```
+
+
+**Example 2 : Create Directory**
+
+Step to follow:
+
+* Create "file-create-directory.yml" file in playbooks
+
+```bash
+---
+- name: Create Directory 'example'
+  hosts: all_targets
+  become: true
+  tasks:
+  - name: Create Directory
+    file:
+        path: "/home/ansible/example"
+        state: directory
+        mode: 755
+        owner: ansible
+        group: ansible
+```
+
+* Execute the following command (examples-playbooks/)
+
+```bash
+ansible-playbook -i inventary.txt playbooks/file-create-directory.yml
+```
+
+
+
+
+## User Playbook
+
+**Example 1 : Create "test" user**
+
+Step to follow:
+
+* Create "user-create-test-user.yml" file in playbooks
+
+```bash
+---
+- name: Create 'test' user
+  hosts: all_targets
+  become: true
+  tasks:
+  - name: Create User
+      user: 
+        name: test 
+        password: changeit2020 
+        groups: ansible 
+        shell: /bin/bash
+```
+
+* Execute the following command (examples-playbooks/)
+
+```bash
+ansible-playbook -i inventary.txt playbooks/user-create-test-user.yml
+```
+
+
+**Example 2 : Delete "test" user**
+
+Step to follow:
+
+* Create "user-delete-test-user.yml" file in playbooks
+
+```bash
+---
+- name: Delete 'test' user
+  hosts: all_targets
+  become: true
+  tasks:
+  - name: Delete user
+      user: 
+        name: test 
+        state: absent
+        remove: yes
+        force: yes
+```
+
+remove : delete home directory
+force : delete all files 
+
+
+* Execute the following command (examples-playbooks/)
+
+```bash
+ansible-playbook -i inventary.txt playbooks/user-delete-test-user.yml
+```
+
+
 
 
 

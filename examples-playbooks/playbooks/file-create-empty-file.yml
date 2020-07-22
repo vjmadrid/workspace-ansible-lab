@@ -4,4 +4,6 @@
   become: true
   tasks:
   - name: Create Empty File
-      file: path=/home/ansible/example.txt state=touch
+    file:
+        path: "/home/ansible/example.txt"
+        state: touch
