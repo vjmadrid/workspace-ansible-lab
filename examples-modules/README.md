@@ -11,9 +11,32 @@ This project is a repository of examples / exercises to **practices** with some 
 Define which elements are necessary to use the examples
 
 * Ansible installed
-* Define your own inventory file with the name : "inventary.txt"
+* Define your own inventory file with the name : "inventory.txt"
+* Define your own inventory file with the name : "ansible.cfg"
+* Define your own inventory file with the name : "hosts" (used ansible.cfg)
 * The inventory file should have a grouping of hosts named "all_targets"
 
+**Example "inventory.txt"**
+
+```bash
+ansible-target-1 ansible_host=IP_1
+ansible-target-2 ansible_host=IP_2
+
+[all_targets]
+ansible-target-1
+ansible-target-2 
+```
+
+**Example "ansible.cfg"**
+
+```bash
+[defaults]
+allow_world_readable_tmpfiles = True
+host_key_checking = False
+retry_files_enabled = False
+inventory = ./hosts
+roles_path = ./roles
+```
 
 
 
@@ -38,12 +61,23 @@ Define which elements are necessary to use the examples
 
 **Example 1 : Pinging the grouped hosts**
 
-Execute the following command
+Execute the following command (with specific inventory)
 
 ```bash
 ansible all_targets -i inventory.txt -m ping
 ```
 
+Execute the following command (with specific ansible.cfg)
+
+```bash
+ansible all_targets -m ping
+```
+
+Execute the following command (with all)
+
+```bash
+ansible all -i inventory.txt -m ping
+```
 
 
 
@@ -55,7 +89,7 @@ ansible all_targets -i inventory.txt -m ping
 Execute the following command
 
 ```bash
-ansible all_targets -i inventary.txt -m setup
+ansible all_targets -i inventory.txt -m setup
 ```
 
 **Example 2 : Show Specific Fact**
@@ -64,16 +98,16 @@ Execute the following command
 
 ```bash
 # Case 1
-ansible all_targets -i inventary.txt -m setup | grep distribution_version
+ansible all_targets -i inventory.txt -m setup | grep distribution_version
 
 # Case 2
-ansible all_targets -i inventary.txt -m setup | grep distribution
+ansible all_targets -i inventory.txt -m setup | grep distribution
 
 # Case 3
-ansible all_targets -i inventary.txt -m setup -a filter=distribution_version
+ansible all_targets -i inventory.txt -m setup -a filter=distribution_version
 
 # Case 4
-ansible all_targets -i inventary.txt -m setup -a filter=distribution_version
+ansible all_targets -i inventory.txt -m setup -a filter=distribution_version
 ```
 
 
@@ -88,7 +122,7 @@ ansible all_targets -i inventary.txt -m setup -a filter=distribution_version
 Execute the following command
 
 ```bash
-ansible all_targets -i inventary.txt -m command -a 'hostname'
+ansible all_targets -i inventory.txt -m command -a 'hostname'
 ```
 
 **Example 2 : Shows the uptime of the grouped hosts**
@@ -96,7 +130,7 @@ ansible all_targets -i inventary.txt -m command -a 'hostname'
 Execute the following command
 
 ```bash
-ansible all_targets -i inventary.txt -m command -a 'uptime'
+ansible all_targets -i inventory.txt -m command -a 'uptime'
 ```
 
 
@@ -110,7 +144,7 @@ ansible all_targets -i inventary.txt -m command -a 'uptime'
 Execute the following command
 
 ```bash
-ansible all_targets -i inventary.txt -m shell -a 'ls -l > temp.txt'
+ansible all_targets -i inventory.txt -m shell -a 'ls -l > temp.txt'
 ```
 
 **Example 2 : Show the contents of the previously generated file**
@@ -118,7 +152,7 @@ ansible all_targets -i inventary.txt -m shell -a 'ls -l > temp.txt'
 Execute the following command
 
 ```bash
-ansible all_targets -i inventary.txt -m command -a 'cat temp.txt'
+ansible all_targets -i inventory.txt -m command -a 'cat temp.txt'
 ```
 
 **Example 3 : Show the contents of use a disk**
@@ -126,7 +160,7 @@ ansible all_targets -i inventary.txt -m command -a 'cat temp.txt'
 Execute the following command
 
 ```bash
-ansible all_targets -i inventary.txt -m command -a 'df -h'
+ansible all_targets -i inventory.txt -m command -a 'df -h'
 ```
 
 
@@ -154,7 +188,7 @@ ansible all_targets -i inventory.txt -m reboot --become
 Execute the following command
 
 ```bash
-ansible all_targets -i inventary.txt -m user -a 'name=test password=changeit2020' --become
+ansible all_targets -i inventory.txt -m user -a 'name=test password=changeit2020' --become
 ```
 
 **Example 2 : Delete user 'test'**
@@ -162,7 +196,7 @@ ansible all_targets -i inventary.txt -m user -a 'name=test password=changeit2020
 Execute the following command
 
 ```bash
-ansible all_targets -i inventary.txt -m user -a 'name=test state=absent' --become
+ansible all_targets -i inventory.txt -m user -a 'name=test state=absent' --become
 ```
 
 
@@ -176,7 +210,7 @@ ansible all_targets -i inventary.txt -m user -a 'name=test state=absent' --becom
 Execute the following command
 
 ```bash
-ansible all_targets -i inventary.txt -m file -a 'dest=/home/ansible/example.txt state=touch mode=600 owner=ansible group=ansible'
+ansible all_targets -i inventory.txt -m file -a 'dest=/home/ansible/example.txt state=touch mode=600 owner=ansible group=ansible'
 ```
 
 **Example 2 : Delete file 'example.txt'**
@@ -184,7 +218,7 @@ ansible all_targets -i inventary.txt -m file -a 'dest=/home/ansible/example.txt 
 Execute the following command
 
 ```bash
-ansible all_targets -i inventary.txt -m file -a 'dest=/home/ansible/example.txt state=absent'
+ansible all_targets -i inventory.txt -m file -a 'dest=/home/ansible/example.txt state=absent'
 ```
 
 **Example 3 : Create directory '/home/ansible/example'**
@@ -200,7 +234,7 @@ ansible all_targets -i inventory.txt -m file -a 'dest=/home/ansible/example stat
 Execute the following command
 
 ```bash
-ansible all_targets -i inventary.txt -m file -a 'dest=/home/ansible/example  state=absent'
+ansible all_targets -i inventory.txt -m file -a 'dest=/home/ansible/example  state=absent'
 ```
 
 
@@ -213,7 +247,7 @@ ansible all_targets -i inventary.txt -m file -a 'dest=/home/ansible/example  sta
 Execute the following command
 
 ```bash
-ansible all_targets -i inventary.txt -m file -a 'src=/home/ansible/example.txt dest=/home/ansible/result.txt'
+ansible all_targets -i inventory.txt -m file -a 'src=/home/ansible/example.txt dest=/home/ansible/result.txt'
 ```
 
 
@@ -227,11 +261,11 @@ ansible all_targets -i inventary.txt -m file -a 'src=/home/ansible/example.txt d
 Execute the following command
 
 ```bash
-ansible all_targets -i inventary.txt -m yum -a 'name=git state=present' --become
+ansible all_targets -i inventory.txt -m yum -a 'name=git state=present' --become
 
 or 
 
-ansible all_targets -i inventary.txt -m yum -a 'name=git state=latest' --become
+ansible all_targets -i inventory.txt -m yum -a 'name=git state=latest' --become
 ```
 
 **Example 2 : Uninstall package 'git'**
@@ -239,7 +273,7 @@ ansible all_targets -i inventary.txt -m yum -a 'name=git state=latest' --become
 Execute the following command
 
 ```bash
-ansible all_targets -i inventary.txt -m yum -a 'name=git state=absent' --become
+ansible all_targets -i inventory.txt -m yum -a 'name=git state=absent' --become
 ```
 
 
@@ -247,12 +281,14 @@ ansible all_targets -i inventary.txt -m yum -a 'name=git state=absent' --become
 
 ## Service Module
 
+Note : install service "httpd"
+
 **Example 1 : Start 'httpd' Service**
 
 Execute the following command
 
 ```bash
-ansible all_targets -i inventary.txt -m service -a 'name=httpd state=started' --become
+ansible all_targets -i inventory.txt -m service -a 'name=httpd state=started' --become
 ```
 
 **Example 2 : Stop 'httpd' Service**
@@ -260,7 +296,7 @@ ansible all_targets -i inventary.txt -m service -a 'name=httpd state=started' --
 Execute the following command
 
 ```bash
-ansible all_targets -i inventary.txt -m service -a 'name=httpd state=stopped' --become
+ansible all_targets -i inventory.txt -m service -a 'name=httpd state=stopped' --become
 ```
 
 **Example 3 : Restart 'httpd' Service**
@@ -268,7 +304,7 @@ ansible all_targets -i inventary.txt -m service -a 'name=httpd state=stopped' --
 Execute the following command
 
 ```bash
-ansible all_targets -i inventary.txt -m service -a 'name=httpd state=restarted' --become
+ansible all_targets -i inventory.txt -m service -a 'name=httpd state=restarted' --become
 ```
 
 
