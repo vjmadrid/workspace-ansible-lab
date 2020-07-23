@@ -296,6 +296,15 @@ force : delete all files
 ansible-playbook -i inventory.txt playbooks/simple/replace-all-instances-string.yml
 ```
 
+* Verify
+
+```bash
+ssh ansible-target-1
+
+cat result.txt
+
+exit
+```
 
 
 
@@ -327,6 +336,17 @@ Step to follow:
 ansible-playbook -i inventory.txt playbooks/simple/archive-create-zip.yml
 ```
 
+* Verify
+
+```bash
+ssh ansible-target-1
+
+ls
+
+exit
+```
+
+
 
 
 
@@ -355,6 +375,17 @@ Step to follow:
 ```bash
 ansible-playbook -i inventory.txt playbooks/simple/yum-install.yml
 ```
+
+* Verify
+
+```bash
+ssh ansible-target-1
+
+git
+
+exit
+```
+
 
 **Example 2 : Install & Start httpd**
 
@@ -398,19 +429,56 @@ Step to follow:
   hosts: all_targets
   become: true
   vars:
-   JRE_VERSION: java-1.8.0-openjdk
+    JRE_VERSION: java-1.8.0-openjdk
   tasks:
   - name: Install OpenJDK Java JRE
-  yum:
-    name: "{{ JRE_VERSION }}"
-    state: present
+    yum:
+      name: "{{ JRE_VERSION }}"
+      state: present
 ```
 
 * Execute the following command (examples-playbooks/complex/)
 
 ```bash
-ansible-playbook -i inventory.txt  playbooks/complex/install-jre.yml --syntax-check
+ansible-playbook -i inventory.txt  playbooks/complex/install-jre.yml
 ```
+
+### Install Maven
+
+Step to follow:
+
+* Create "install-maven.yml" file in playbooks
+
+```bash
+---
+- name: Install JRE
+  hosts: all_targets
+  become: true
+  vars:
+    JRE_VERSION: java-1.8.0-openjdk
+  tasks:
+
+  - name: Check If Maven is already installed
+    shell: "mvn -version | grep -w 'Apache Maven' | awk '{print $3}'"
+    register: maven_version_installed
+  
+  - name: Print Maven Version Installed
+    debug: "msg={{ maven_version_installed.stdout }}"
+
+  # No install
+  - block:
+    - name: NO Maven Version Installed
+      debug: "msg=NO MAVEN INSTALLED"
+
+  when: maven_version_installed.stdout == ""
+```
+
+* Execute the following command (examples-playbooks/complex/)
+
+```bash
+ansible-playbook -i inventory.txt  playbooks/complex/install-maven.yml
+```
+
 
 
 

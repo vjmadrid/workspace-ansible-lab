@@ -1,9 +1,11 @@
 ---
-- name: Install Package 
+- name: Install JRE
   hosts: all_targets
   become: true
+  vars:
+    JRE_VERSION: java-1.8.0-openjdk
   tasks:
-  - name: Install Package 
-    yum: 
-      name: vim,git 
-      state: latest
+  - name: Install OpenJDK Java JRE
+    yum:
+      name: "{{ JRE_VERSION }}"
+      state: present
