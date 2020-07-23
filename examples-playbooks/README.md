@@ -11,7 +11,7 @@ This project is a repository of examples / exercises to **practices** with some 
 Define which elements are necessary to use the examples
 
 * Ansible installed
-* Define your own inventory file with the name : "inventary.txt"
+* Define your own inventory file with the name : "inventory.txt"
 * The inventory file should have a grouping of hosts named "all_targets"
 
 
@@ -53,13 +53,13 @@ Step to follow:
 
 ```bash
 # Syntax-check
-ansible-playbook -i inventary.txt  playbooks/basic-hello-world.yml --syntax-check
+ansible-playbook -i inventory.txt  playbooks/basic-hello-world.yml --syntax-check
 
 # Check
-ansible-playbook -i inventary.txt  playbooks/basic-hello-world.yml --check
+ansible-playbook -i inventory.txt  playbooks/basic-hello-world.yml --check
 
 # Execute
-ansible-playbook -i inventary.txt playbooks/basic-hello-world.yml
+ansible-playbook -i inventory.txt playbooks/basic-hello-world.yml
 ```
 
 
@@ -81,7 +81,7 @@ Step to follow:
 * Execute the following command (examples-playbooks/)
 
 ```bash
-ansible-playbook -i inventary.txt playbooks/basic-print-facts.yml
+ansible-playbook -i inventory.txt playbooks/basic-print-facts.yml
 ```
 
 
@@ -111,7 +111,7 @@ Step to follow:
 * Execute the following command (examples-playbooks/)
 
 ```bash
-ansible-playbook -i inventary.txt playbooks/file-create-empty-file.yml
+ansible-playbook -i inventory.txt playbooks/file-create-empty-file.yml
 ```
 
 
@@ -139,7 +139,7 @@ Step to follow:
 * Execute the following command (examples-playbooks/)
 
 ```bash
-ansible-playbook -i inventary.txt playbooks/file-create-directory.yml
+ansible-playbook -i inventory.txt playbooks/file-create-directory.yml
 ```
 
 
@@ -170,7 +170,7 @@ Step to follow:
 * Execute the following command (examples-playbooks/)
 
 ```bash
-ansible-playbook -i inventary.txt playbooks/user-create-test-user.yml
+ansible-playbook -i inventory.txt playbooks/user-create-test-user.yml
 ```
 
 
@@ -201,7 +201,7 @@ force : delete all files
 * Execute the following command (examples-playbooks/)
 
 ```bash
-ansible-playbook -i inventary.txt playbooks/user-delete-test-user.yml
+ansible-playbook -i inventory.txt playbooks/user-delete-test-user.yml
 ```
 
 
