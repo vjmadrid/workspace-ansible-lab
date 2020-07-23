@@ -51,6 +51,8 @@ roles_path = ./roles
 * User Module
 * File Module
 * Copy Module
+* Replace Module
+* Lineinfile Module
 * Manager Software Package Module (yum for CentOs)
 * Service Module
 
@@ -147,6 +149,16 @@ Execute the following command
 ansible all_targets -i inventory.txt -m shell -a 'ls -l > temp.txt'
 ```
 
+Verify 
+
+```bash
+ssh ansible-target-1
+
+ls
+
+exit
+```
+
 **Example 2 : Show the contents of the previously generated file**
 
 Execute the following command
@@ -188,7 +200,19 @@ ansible all_targets -i inventory.txt -m reboot --become
 Execute the following command
 
 ```bash
-ansible all_targets -i inventory.txt -m user -a 'name=test password=changeit2020' --become
+ansible all_targets -i inventory.txt -m user -a 'name=test password=changeit2020 groups=ansible shell=/bin/bash' --become
+```
+
+Verify 
+
+```bash
+ssh ansible-target-1
+
+cat /etc/passwd
+
+su test
+
+exit
 ```
 
 **Example 2 : Delete user 'test'**
@@ -196,7 +220,7 @@ ansible all_targets -i inventory.txt -m user -a 'name=test password=changeit2020
 Execute the following command
 
 ```bash
-ansible all_targets -i inventory.txt -m user -a 'name=test state=absent' --become
+ansible all_targets -i inventory.txt -m user -a 'name=test state=absent remove=yes force=yes' --become
 ```
 
 
@@ -213,12 +237,32 @@ Execute the following command
 ansible all_targets -i inventory.txt -m file -a 'dest=/home/ansible/example.txt state=touch mode=600 owner=ansible group=ansible'
 ```
 
+Verify
+
+```bash
+ssh ansible-target-1
+
+ls
+
+exit
+```
+
 **Example 2 : Delete file 'example.txt'**
 
 Execute the following command
 
 ```bash
 ansible all_targets -i inventory.txt -m file -a 'dest=/home/ansible/example.txt state=absent'
+```
+
+Verify
+
+```bash
+ssh ansible-target-1
+
+ls
+
+exit
 ```
 
 **Example 3 : Create directory '/home/ansible/example'**
@@ -229,12 +273,32 @@ Execute the following command
 ansible all_targets -i inventory.txt -m file -a 'dest=/home/ansible/example state=directory mode=755'
 ```
 
+Verify
+
+```bash
+ssh ansible-target-1
+
+ls
+
+exit
+```
+
 **Example 4 : Delete directory '/home/ansible/example'**
 
 Execute the following command
 
 ```bash
-ansible all_targets -i inventory.txt -m file -a 'dest=/home/ansible/example  state=absent'
+ansible all_targets -i inventory.txt -m file -a 'dest=/home/ansible/example state=absent'
+```
+
+Verify
+
+```bash
+ssh ansible-target-1
+
+ls
+
+exit
 ```
 
 
@@ -242,12 +306,100 @@ ansible all_targets -i inventory.txt -m file -a 'dest=/home/ansible/example  sta
 
 ## Copy Module
 
-**Example 1 : Copy File**
+**Example 1 : Copy file**
 
 Execute the following command
 
 ```bash
-ansible all_targets -i inventory.txt -m file -a 'src=/home/ansible/example.txt dest=/home/ansible/result.txt'
+ansible all_targets -i inventory.txt -m copy -a 'src=/home/ansible/example.txt dest=/home/ansible/result.txt remote_src=yes'
+```
+
+```bash
+ssh ansible-target-1
+
+ls
+
+exit
+```
+
+**Example 2 : Copy content to a file**
+
+Execute the following command
+
+```bash
+ansible all_targets -i inventory.txt -m copy -a 'content="Hello World!\n" dest=/home/ansible/result.txt remote_src=yes'
+```
+
+```bash
+ssh ansible-target-1
+
+cat result.txt
+
+exit
+```
+
+
+
+
+
+## Replace Module
+
+**Example 1 : Replace all instances of a string**
+
+Execute the following command
+
+```bash
+ansible all_targets -i inventory.txt -m replace -a "path=/home/ansible/result.txt regexp='World' replace='Test'"
+```
+
+```bash
+ssh ansible-target-1
+
+cat result.txt
+
+exit
+```
+
+
+
+
+
+## Lineinfile Module
+
+**Example 1 : Add New Line**
+
+Execute the following command
+
+```bash
+ansible all_targets -i inventory.txt -m lineinfile -a "path=/home/ansible/result.txt line='Description' create=yes"
+```
+
+Verify
+
+```bash
+ssh ansible-target-1
+
+cat result.txt
+
+exit
+```
+
+**Example 2 : Replace all instances of a string**
+
+Execute the following command
+
+```bash
+ansible all_targets -i inventory.txt -m lineinfile -a "path=/home/ansible/result.txt regexp='Description' line='Description Updated'"
+```
+
+Verify
+
+```bash
+ssh ansible-target-1
+
+cat result.txt
+
+exit
 ```
 
 
@@ -268,6 +420,12 @@ or
 ansible all_targets -i inventory.txt -m yum -a 'name=git state=latest' --become
 ```
 
+Verify
+
+```bash
+ansible all_targets -i inventory.txt -m shell -a 'git --version'
+```
+
 **Example 2 : Uninstall package 'git'**
 
 Execute the following command
@@ -276,12 +434,39 @@ Execute the following command
 ansible all_targets -i inventory.txt -m yum -a 'name=git state=absent' --become
 ```
 
+Verify
+
+```bash
+ansible all_targets -i inventory.txt -m shell -a 'git --version'
+```
+
+Command not found
+
+
 
 
 
 ## Service Module
 
 Note : install service "httpd"
+
+```bash
+# Install
+ansible all_targets -i inventory.txt -m yum -a 'name=httpd state=present' --become
+
+#Uninstall
+ansible all_targets -i inventory.txt -m yum -a 'name=httpd state=absent' --become
+```
+
+Verify
+
+```bash
+ssh ansible-target-1
+
+systemctl status httpd
+
+exit
+```
 
 **Example 1 : Start 'httpd' Service**
 
