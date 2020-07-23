@@ -121,6 +121,14 @@ Execute the following command
 ansible all_targets -i inventary.txt -m command -a 'cat temp.txt'
 ```
 
+**Example 3 : Show the contents of use a disk**
+
+Execute the following command
+
+```bash
+ansible all_targets -i inventary.txt -m command -a 'df -h'
+```
+
 
 
 

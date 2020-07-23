@@ -23,6 +23,10 @@ Define which elements are necessary to use the examples
 * Basic Playbook
 * File Playbook
 * User Playbook
+* Replace Playbook
+* LineinLine PlayBook
+* Archive Playbook
+
 
 
 
@@ -200,6 +204,15 @@ force : delete all files
 ansible-playbook -i inventary.txt playbooks/user-delete-test-user.yml
 ```
 
+
+
+
+## Replace Playbook
+
+
+
+
+## Archive Playbook
 
 
 

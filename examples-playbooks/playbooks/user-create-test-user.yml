@@ -1,12 +1,11 @@
 ---
-- name: Create Directory 'example'
+- name: Create 'test' user
   hosts: all_targets
   become: true
   tasks:
-  - name: Create Directory
-    file:
-        path: "/home/ansible/example"
-        state: directory
-        mode: 755
-        owner: ansible
-        group: ansible
+  - name: Create User
+    user: 
+      name: test 
+      password: changeit2020 
+      groups: ansible 
+      shell: /bin/bash
