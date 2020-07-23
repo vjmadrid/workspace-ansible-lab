@@ -455,18 +455,49 @@ Step to follow:
   hosts: all_targets
   become: true
   vars:
-    JRE_VERSION: java-1.8.0-openjdk
+    MAVEN_MAJOR: "3"
+    MAVEN_VERSION: "3.6.3"
+    MAVEN_DOWNLOAD_URL: "http://www.apache.org/dist/maven/maven-{{ MAVEN_MAJOR }}/{{ MAVEN_VERSION }}/binaries/apache-maven-{{ MAVEN_VERSION }}-bin.tar.gz"
+    MAVEN_HOME: "/op"
+    MAVEN_ENV_FILE: "/etc/profile.d/maven.sh"
   tasks:
-  - name: Check If Maven is already installed
-    shell: "mvn -version | grep -w 'Apache Maven' | awk '{print $3}'"
-    register: maven_version_installed
-  - name: Print Maven Version Installed
-    debug: "msg={{ maven_version_installed.stdout }}"
-  # No install
-  - block:
-    - name: NO Maven Version Installed
-      debug: "msg=NO MAVEN INSTALLED"
-    when: maven_version_installed.stdout == ""
+  
+    - name: Check If Maven is already installed
+      shell: "mvn -version | grep -w 'Apache Maven' | awk '{print $3}'"
+      register: maven_version_installed
+  
+    - name: Print Maven Version Installed
+      debug: "msg={{ maven_version_installed.stdout }}"
+    
+    # No install
+    - block:
+    
+      - name: Download and Unarchive maven
+        unarchive:
+          src: "{{ MAVEN_DOWNLOAD_URL }}"
+          dest: "{{MAVEN_HOME}}"
+          copy: no
+
+      - name: Create maven symlink to /usr/bin
+        file:
+          src: "{{ MAVEN_HOME }}/apache-maven-{{ MAVEN_VERSION }}/bin/mvn"
+          dest: /usr/bin/mvn
+          state: link
+
+      - name: Configure maven and its environment variables
+        lineinfile:
+          dest: "{{MAVEN_ENV_FILE}}"
+          line: "{{ item.line }}"
+          create: yes
+          state: present
+        with_items:
+        - { line: 'M2_HOME={{MAVEN_HOME}}/apache-maven-{{MAVEN_VERSION}}' }
+        - { line: 'PATH=$PATH:$M2_HOME/bin' }
+
+      - name: Exports/Run maven env file for make M2_HOME available globally
+        shell: "source {{MAVEN_ENV_FILE}}"
+      
+      when: maven_version_installed.stdout == ""
 ```
 
 * Execute the following command (examples-playbooks/complex/)
