@@ -458,7 +458,7 @@ Step to follow:
     MAVEN_MAJOR: "3"
     MAVEN_VERSION: "3.6.3"
     MAVEN_DOWNLOAD_URL: "http://www.apache.org/dist/maven/maven-{{ MAVEN_MAJOR }}/{{ MAVEN_VERSION }}/binaries/apache-maven-{{ MAVEN_VERSION }}-bin.tar.gz"
-    MAVEN_HOME: "/op"
+    MAVEN_HOME: "/opt"
     MAVEN_ENV_FILE: "/etc/profile.d/maven.sh"
   tasks:
   
