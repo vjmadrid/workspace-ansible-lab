@@ -14,11 +14,24 @@ Define which elements are necessary to use the examples
 * Define your own inventory file with the name : "inventory.txt"
 * The inventory file should have a grouping of hosts named "all_targets"
 
+**Example "inventory.txt"**
+
+```bash
+ansible-target-1 ansible_host=IP_1
+ansible-target-2 ansible_host=IP_2
+
+[all_targets]
+ansible-target-1
+ansible-target-2 
+```
+
 
 
 
 
 ## Examples
+
+**Simple**
 
 * Basic Playbook
 * File Playbook
@@ -26,13 +39,16 @@ Define which elements are necessary to use the examples
 * Replace Playbook
 * LineinLine PlayBook
 * Archive Playbook
+* Manager Software Package Module (yum for CentOs) / Service Module
+
+**Complex**
+
+* Install JDK
 
 
+## Simple
 
-
-
-
-## Basic Playbook
+### Basic Playbook
 
 **Example 1 : Print Hello World**
 
@@ -49,17 +65,17 @@ Step to follow:
       msg: "Hello World!"
 ```
 
-* Execute the following command (examples-playbooks/)
+* Execute the following command (examples-playbooks/simple/)
 
 ```bash
 # Syntax-check
-ansible-playbook -i inventory.txt  playbooks/basic-hello-world.yml --syntax-check
+ansible-playbook -i inventory.txt  playbooks/simple/basic-hello-world.yml --syntax-check
 
 # Check
-ansible-playbook -i inventory.txt  playbooks/basic-hello-world.yml --check
+ansible-playbook -i inventory.txt  playbooks/simple/basic-hello-world.yml --check
 
 # Execute
-ansible-playbook -i inventory.txt playbooks/basic-hello-world.yml
+ansible-playbook -i inventory.txt playbooks/simple/basic-hello-world.yml
 ```
 
 
@@ -78,17 +94,17 @@ Step to follow:
       msg: "Hello World!"
 ```
 
-* Execute the following command (examples-playbooks/)
+* Execute the following command (examples-playbooks/simple/)
 
 ```bash
-ansible-playbook -i inventory.txt playbooks/basic-print-facts.yml
+ansible-playbook -i inventory.txt playbooks/simple/basic-print-facts.yml
 ```
 
 
 
 
 
-## File Playbook
+### File Playbook
 
 **Example 1 : Create File**
 
@@ -108,10 +124,20 @@ Step to follow:
         state: touch
 ```
 
-* Execute the following command (examples-playbooks/)
+* Execute the following command (examples-playbooks/simple/)
 
 ```bash
-ansible-playbook -i inventory.txt playbooks/file-create-empty-file.yml
+ansible-playbook -i inventory.txt playbooks/simple/file-create-empty-file.yml
+```
+
+* Verify
+
+```bash
+ssh ansible-target-1
+
+ls
+
+exit
 ```
 
 
@@ -139,13 +165,24 @@ Step to follow:
 * Execute the following command (examples-playbooks/)
 
 ```bash
-ansible-playbook -i inventory.txt playbooks/file-create-directory.yml
+ansible-playbook -i inventory.txt playbooks/simple/file-create-directory.yml
+```
+
+* Verify
+
+```bash
+ssh ansible-target-1
+
+ls
+
+exit
 ```
 
 
 
 
-## User Playbook
+
+### User Playbook
 
 **Example 1 : Create "test" user**
 
@@ -167,10 +204,22 @@ Step to follow:
         shell: /bin/bash
 ```
 
-* Execute the following command (examples-playbooks/)
+* Execute the following command (examples-playbooks/simple/)
 
 ```bash
-ansible-playbook -i inventory.txt playbooks/user-create-test-user.yml
+ansible-playbook -i inventory.txt playbooks/simple/user-create-test-user.yml
+```
+
+Verify 
+
+```bash
+ssh ansible-target-1
+
+cat /etc/passwd
+
+su test
+
+exit
 ```
 
 
@@ -197,22 +246,175 @@ Step to follow:
 remove : delete home directory
 force : delete all files 
 
-
 * Execute the following command (examples-playbooks/)
 
 ```bash
-ansible-playbook -i inventory.txt playbooks/user-delete-test-user.yml
+ansible-playbook -i inventory.txt playbooks/simple/user-delete-test-user.yml
 ```
 
 
 
 
-## Replace Playbook
+
+### Replace Playbook
+
+**Example 1 : Replace Strings user**
+
+Step to follow:
+
+* Create "replace-all-instances-string.yml" file in playbooks
+
+```bash
+---
+- name: Replace all instances of String
+  hosts: all_targets
+  become: true
+  tasks:
+  - name: Copy content to a file
+    copy:
+      content: "Hello World!\n" 
+      dest: /home/ansible/result.txt 
+      remote_src: yes
+  - name: Replace all instances of a string
+    replace: 
+      path: /home/ansible/result.txt 
+      regexp: 'World'
+      replace: 'Test'
+  - name: Ensure SELinux is set to enforcing mode
+    lineinfile:
+      path: /home/ansible/result.txt 
+      regexp: 'Test'
+      line: 'Test Updated'
+```
+
+remove : delete home directory
+force : delete all files 
+
+* Execute the following command (examples-playbooks/simple/)
+
+```bash
+ansible-playbook -i inventory.txt playbooks/simple/replace-all-instances-string.yml
+```
 
 
 
 
-## Archive Playbook
+
+### Archive Playbook
+
+**Example 1 : Zip file**
+
+Step to follow:
+
+* Create "archive-create-zip.yml" file in playbooks
+
+```bash
+---
+- name: Create Zip
+  hosts: all_targets
+  tasks:
+  - name: Ansible zip directory home 'ansible'
+    archive:
+      path:
+      - /home/ansible
+      dest: /home/ansible/example.zip
+      format: zip
+```
+
+* Execute the following command (examples-playbooks/simple/)
+
+```bash
+ansible-playbook -i inventory.txt playbooks/simple/archive-create-zip.yml
+```
+
+
+
+
+### Manager Software Package Module (yum for CentOs) / Service Module
+
+**Example 1 : Install vim and git**
+
+Step to follow:
+
+* Create "yum-install.yml" file in playbooks
+
+```bash
+---
+- name: Install Package 
+  hosts: all_targets
+  become: true
+  tasks:
+  - name: Install Package 
+    yum: 
+      name: vim,git 
+      state: latest
+```
+
+* Execute the following command (examples-playbooks/simple/)
+
+```bash
+ansible-playbook -i inventory.txt playbooks/simple/yum-install.yml
+```
+
+**Example 2 : Install & Start httpd**
+
+Step to follow:
+
+* Create "yum-install-start-httpd.yml" file in playbooks
+
+```bash
+---
+- name: Install Package httpd
+  hosts: all_targets
+  become: true
+  tasks:
+  - name: Install Package httpd
+    yum: name=httpd state=present
+  - name: Start httpd service
+    service: name=httpd state=started
+```
+
+* Execute the following command (examples-playbooks/simple/)
+
+```bash
+ansible-playbook -i inventory.txt playbooks/simple/yum-install.yml
+```
+
+
+
+
+
+## Complex
+
+### Install JRE
+
+Step to follow:
+
+* Create "install-jre.yml" file in playbooks
+
+```bash
+---
+- name: Install JRE
+  hosts: all_targets
+  become: true
+  vars:
+   JRE_VERSION: java-1.8.0-openjdk
+  tasks:
+  - name: Install OpenJDK Java JRE
+  yum:
+    name: "{{ JRE_VERSION }}"
+    state: present
+```
+
+* Execute the following command (examples-playbooks/complex/)
+
+```bash
+ansible-playbook -i inventory.txt  playbooks/complex/install-jre.yml --syntax-check
+```
+
+
+
+
 
 
 

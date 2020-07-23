@@ -1,0 +1,20 @@
+---
+- name: Replace all instances of String
+  hosts: all_targets
+  become: true
+  tasks:
+  - name: Copy content to a file
+    copy:
+      content: "Hello World!\n" 
+      dest: /home/ansible/result.txt 
+      remote_src: yes
+  - name: Replace all instances of a string
+    replace: 
+      path: /home/ansible/result.txt 
+      regexp: 'World'
+      replace: 'Test'
+  - name: Ensure SELinux is set to enforcing mode
+    lineinfile:
+      path: /home/ansible/result.txt 
+      regexp: 'Test'
+      line: 'Test Updated'

@@ -1,0 +1,10 @@
+---
+- name: Create Zip
+  hosts: all_targets
+  tasks:
+  - name: Ansible zip directory home 'ansible'
+    archive:
+      path:
+      - /home/ansible
+      dest: /home/ansible/example.zip
+      format: zip

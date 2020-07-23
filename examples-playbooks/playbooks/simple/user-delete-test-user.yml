@@ -1,0 +1,11 @@
+---
+- name: Delete 'test' user
+  hosts: all_targets
+  become: true
+  tasks:
+  - name: Delete user
+    user:
+      name: test 
+      state: absent
+      remove: yes
+      force: yes
