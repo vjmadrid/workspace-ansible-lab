@@ -1,0 +1,13 @@
+---
+- name: Prepare Environment
+  hosts: all_targets
+  become: yes
+  tasks:
+
+  - name: User Role Apache
+    include_role:
+      name: geerlingguy.apache
+  
+  - name: Include Role Maven 'custom-maven'
+    include_role:
+      name: custom-maven

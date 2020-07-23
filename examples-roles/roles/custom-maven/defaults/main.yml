@@ -1,0 +1,8 @@
+---
+# defaults file for roles/custom-maven
+
+#Maven vars
+maven_major: 3
+maven_version: 3.6.3
+maven_home: /opt
+maven_env_file: "/etc/profile.d/maven.sh"

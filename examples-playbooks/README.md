@@ -506,6 +506,18 @@ Step to follow:
 ansible-playbook -i inventory.txt  playbooks/complex/install-maven.yml
 ```
 
+Verify
+
+```bash
+ssh ansible-target-1
+
+mvn
+
+echo $M2_HOME
+
+exit
+```
+
 
 
 
