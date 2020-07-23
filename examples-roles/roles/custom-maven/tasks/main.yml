@@ -1,12 +1,6 @@
 ---
 # tasks file for roles/custom-maven
-- name: Install Maven
-  hosts: all_targets
-  become: true
-  vars:
-    MAVEN_DOWNLOAD_URL: "http://www.apache.org/dist/maven/maven-{{ maven_major }}/{{ maven_version }}/binaries/apache-maven-{{ maven_version }}-bin.tar.gz"
-  tasks:
-  
+
     - name: Check If Maven is already installed
       shell: "mvn -version | grep -w 'Apache Maven' | awk '{print $3}'"
       register: maven_version_installed
@@ -19,7 +13,7 @@
     
       - name: Download and Unarchive maven
         unarchive:
-          src: "{{ MAVEN_DOWNLOAD_URL }}"
+          src: "http://www.apache.org/dist/maven/maven-{{ maven_major }}/{{ maven_version }}/binaries/apache-maven-{{ maven_version }}-bin.tar.gz"
           dest: "{{maven_home}}"
           copy: no
 
