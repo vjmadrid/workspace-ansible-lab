@@ -39,7 +39,7 @@ ansible-target-2
 * Execute the following command (examples-roles/)
 
 ```bash
-ansible-playbook -i inventory.txt  playbooks/prepare.yml
+ansible-playbook -i inventory.txt prepare.yml
 ```
 
 
