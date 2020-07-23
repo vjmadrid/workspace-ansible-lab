@@ -13,5 +13,5 @@
   # No install
   - block:
     - name: NO Maven Version Installed
-      debug: "msg=NO MAVEN INSTALLED"
+      debug: "msg='NO MAVEN INSTALLED'"
     when: maven_version_installed.stdout == ""
