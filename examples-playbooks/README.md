@@ -451,26 +451,22 @@ Step to follow:
 
 ```bash
 ---
-- name: Install JRE
+- name: Install Maven
   hosts: all_targets
   become: true
   vars:
     JRE_VERSION: java-1.8.0-openjdk
   tasks:
-
   - name: Check If Maven is already installed
     shell: "mvn -version | grep -w 'Apache Maven' | awk '{print $3}'"
     register: maven_version_installed
-  
   - name: Print Maven Version Installed
     debug: "msg={{ maven_version_installed.stdout }}"
-
   # No install
   - block:
     - name: NO Maven Version Installed
       debug: "msg=NO MAVEN INSTALLED"
-
-  when: maven_version_installed.stdout == ""
+    when: maven_version_installed.stdout == ""
 ```
 
 * Execute the following command (examples-playbooks/complex/)
