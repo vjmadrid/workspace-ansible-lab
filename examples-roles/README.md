@@ -36,6 +36,15 @@ ansible-target-2
 
 ### Install Roles
 
+
+* Install requirements
+
+```bash
+ansible-galaxy install --role-file requirements.yml
+```
+
+
+
 * Execute the following command (examples-roles/)
 
 ```bash
