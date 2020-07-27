@@ -1,0 +1,6 @@
+---
+- name: Ping Group 
+  hosts: all_targets
+  tasks:
+  - name: Ping Group
+    ping:

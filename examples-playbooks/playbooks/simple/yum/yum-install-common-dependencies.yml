@@ -1,0 +1,12 @@
+---
+- name: Install Common Dependencies
+  hosts: all_targets
+  become: true
+  tasks:
+  - name: Install Common Dependdencies
+    yum: 
+      name: 
+        - libselinux-python
+        - libsemanage-python
+        - firewalld
+      state: latest

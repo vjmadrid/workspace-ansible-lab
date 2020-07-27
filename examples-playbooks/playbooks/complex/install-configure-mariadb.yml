@@ -1,0 +1,53 @@
+---
+
+- name: Prepare Environment for MariaDB
+  hosts: db_servers
+  become: yes
+  tasks:
+
+    - name: Install common dependencies
+      yum:
+        name:
+          - libselinux-python
+          - libsemanage-python
+          - firewalld
+        state: installed
+
+- name: Install / Configure MariaDB
+  hosts: db_servers
+  become: true
+  vars:
+    mysql_port: 3306
+  tasks:
+
+    - name: Install MariaDB Package
+      yum:
+        name:
+          - mariadb-server
+          - MySQL-python
+        state: installed
+
+    - name: Create Custom Mysql Configuration file
+      copy: src=files/my.cnf dest=/etc/my.cnf
+
+    - name: Start mariadb Service
+      service: name=mariadb state=started enabled=yes
+
+    - name: Start firewalld Service
+      service: name=firewalld state=started enabled=yes
+
+    - name: Insert firewalld Rule for mariadb 
+      firewalld: port={{ mysql_port }}/tcp permanent=true state=enabled
+
+- name: Prepare Data for MariaDB
+  hosts: db_servers
+  become: true
+  tasks:
+
+    - name: Move db-load-script to db host
+      copy:
+        src: files/db-load-script.sql
+        dest: /tmp/db-load-script.sql
+
+    - name: Load Inventory Data
+      shell: mysql -f < /tmp/db-load-script.sql

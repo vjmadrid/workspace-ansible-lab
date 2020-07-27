@@ -3,4 +3,10 @@ ansible-target-2 ansible_host=192.168.1.92
 
 [all_targets]
 ansible-target-1
-ansible-target-2 
+ansible-target-2
+
+[web_servers]
+ansible-target-1
+
+[db_servers]
+ansible-target-2

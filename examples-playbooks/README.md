@@ -34,16 +34,20 @@ ansible-target-2
 **Simple**
 
 * Basic Playbook
+* Ping Playbook
+* Reoot Playbook
 * File Playbook
 * User Playbook
-* Replace Playbook
-* LineinLine PlayBook
+* Replace Playbook (Mix: )
 * Archive Playbook
 * Manager Software Package Module (yum for CentOs) / Service Module
 
 **Complex**
 
 * Install JDK
+
+
+
 
 
 ## Simple
@@ -65,17 +69,17 @@ Step to follow:
       msg: "Hello World!"
 ```
 
-* Execute the following command (examples-playbooks/simple/)
+* Execute the following command (examples-playbooks/simple/basic/)
 
 ```bash
 # Syntax-check
-ansible-playbook -i inventory.txt  playbooks/simple/basic-hello-world.yml --syntax-check
+ansible-playbook -i inventory.txt  playbooks/simple/basic/basic-hello-world.yml --syntax-check
 
 # Check
-ansible-playbook -i inventory.txt  playbooks/simple/basic-hello-world.yml --check
+ansible-playbook -i inventory.txt  playbooks/simple/basic/basic-hello-world.yml --check
 
 # Execute
-ansible-playbook -i inventory.txt playbooks/simple/basic-hello-world.yml
+ansible-playbook -i inventory.txt playbooks/simple/basic/basic-hello-world.yml
 ```
 
 
@@ -94,10 +98,76 @@ Step to follow:
       msg: "Hello World!"
 ```
 
-* Execute the following command (examples-playbooks/simple/)
+* Execute the following command (examples-playbooks/simple/basic/)
 
 ```bash
-ansible-playbook -i inventory.txt playbooks/simple/basic-print-facts.yml
+ansible-playbook -i inventory.txt playbooks/simple/basic/basic-print-facts.yml
+```
+
+
+
+
+
+### Ping Playbook
+
+**Example 1 : Pinging Group**
+
+Step to follow:
+
+* Create "ping.yml" file in playbooks
+
+```bash
+---
+- name: Ping Group 
+  hosts: all_targets
+  tasks:
+  - name: Ping Group
+    ping:
+```
+
+* Execute the following command (examples-playbooks/simple/ping/)
+
+```bash
+ansible-playbook -i inventory.txt playbooks/simple/ping/ping.yml
+```
+
+
+
+
+
+### Reboot Playbook
+
+**Example 1 : Reboot and wait hosts**
+
+Step to follow:
+
+* Create "rebot-wait.yml" file in playbooks
+
+```bash
+---
+- name: Reboot and wait
+  hosts: all_targets
+  tasks:
+
+  - name: Rebooting
+    shell: sleep 2 && reboot
+    async: 1
+    poll: 0
+
+  - name: Waiting for rebooting
+    wait_for_connection:
+      delay: 15
+      sleep: 10
+      timeout: 300 
+
+  - debug:
+        msg: "{{ inventory_hostname }} is up and running"
+```
+
+* Execute the following command (examples-playbooks/simple/reboot/)
+
+```bash
+ansible-playbook -i inventory.txt playbooks/simple/reboot/rebot-wait.yml
 ```
 
 
@@ -124,10 +194,10 @@ Step to follow:
         state: touch
 ```
 
-* Execute the following command (examples-playbooks/simple/)
+* Execute the following command (examples-playbooks/simple/file/)
 
 ```bash
-ansible-playbook -i inventory.txt playbooks/simple/file-create-empty-file.yml
+ansible-playbook -i inventory.txt playbooks/simple/file/file-create-empty-file.yml
 ```
 
 * Verify
@@ -162,10 +232,10 @@ Step to follow:
         group: ansible
 ```
 
-* Execute the following command (examples-playbooks/)
+* Execute the following command (examples-playbooks/simple/file)
 
 ```bash
-ansible-playbook -i inventory.txt playbooks/simple/file-create-directory.yml
+ansible-playbook -i inventory.txt playbooks/simple/file/file-create-directory.yml
 ```
 
 * Verify
@@ -204,10 +274,10 @@ Step to follow:
         shell: /bin/bash
 ```
 
-* Execute the following command (examples-playbooks/simple/)
+* Execute the following command (examples-playbooks/simple/user/)
 
 ```bash
-ansible-playbook -i inventory.txt playbooks/simple/user-create-test-user.yml
+ansible-playbook -i inventory.txt playbooks/simple/user/user-create-test-user.yml
 ```
 
 Verify 
@@ -246,10 +316,10 @@ Step to follow:
 remove : delete home directory
 force : delete all files 
 
-* Execute the following command (examples-playbooks/)
+* Execute the following command (examples-playbooks/simple/user)
 
 ```bash
-ansible-playbook -i inventory.txt playbooks/simple/user-delete-test-user.yml
+ansible-playbook -i inventory.txt playbooks/simple/user/user-delete-test-user.yml
 ```
 
 
@@ -352,28 +422,28 @@ exit
 
 ### Manager Software Package Module (yum for CentOs) / Service Module
 
-**Example 1 : Install vim and git**
+**Example 1 : Install vim and git (case 1)**
 
 Step to follow:
 
-* Create "yum-install.yml" file in playbooks
+* Create "yum-install-1.yml" file in playbooks
 
 ```bash
 ---
-- name: Install Package 
+- name: Install Package 1
   hosts: all_targets
   become: true
   tasks:
-  - name: Install Package 
+  - name: Install Package 1
     yum: 
       name: vim,git 
       state: latest
 ```
 
-* Execute the following command (examples-playbooks/simple/)
+* Execute the following command (examples-playbooks/simple/yum/)
 
 ```bash
-ansible-playbook -i inventory.txt playbooks/simple/yum-install.yml
+ansible-playbook -i inventory.txt playbooks/simple/yum/yum-install-1.yml
 ```
 
 * Verify
@@ -387,7 +457,82 @@ exit
 ```
 
 
-**Example 2 : Install & Start httpd**
+**Example 2 : Install vim and git (case 2)**
+
+Step to follow:
+
+* Create "yum-install-2.yml" file in playbooks
+
+```bash
+---
+- name: Install Package 2
+  hosts: all_targets
+  become: true
+  tasks:
+  - name: Install Package 2
+    yum: 
+      name: 
+        - vim
+        - git 
+      state: latest
+```
+
+* Execute the following command (examples-playbooks/simple/yum/)
+
+```bash
+ansible-playbook -i inventory.txt playbooks/simple/yum/yum-install-2.yml
+```
+
+* Verify
+
+```bash
+ssh ansible-target-1
+
+git
+
+exit
+```
+
+
+**Example 3 : Install Common Dependencies**
+
+Step to follow:
+
+* Create "yum-install-common-dependencies.yml" file in playbooks
+
+```bash
+---
+- name: Install Common Dependencies
+  hosts: all_targets
+  become: true
+  tasks:
+  - name: Install Common Dependdencies
+    yum: 
+      name: 
+        - libselinux-python
+        - libsemanage-python
+        - firewalld
+      state: latest
+```
+
+* Execute the following command (examples-playbooks/simple/yum/)
+
+```bash
+ansible-playbook -i inventory.txt playbooks/simple/yum/yum-install-common-dependencies.yml
+```
+
+* Verify
+
+```bash
+ssh ansible-target-1
+
+python3
+
+exit
+```
+
+
+**Example 4 : Install & Start httpd**
 
 Step to follow:
 

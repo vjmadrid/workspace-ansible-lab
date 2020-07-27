@@ -43,8 +43,8 @@ roles_path = ./roles
 
 ## Examples
 
-* Ping Module
 * Setup Module
+* Ping Module
 * Command Module
 * Shell Module
 * Reboot Module
@@ -55,31 +55,6 @@ roles_path = ./roles
 * Lineinfile Module
 * Manager Software Package Module (yum for CentOs)
 * Service Module
-
-
-
-
-## Setup Module
-
-**Example 1 : Pinging the grouped hosts**
-
-Execute the following command (with specific inventory)
-
-```bash
-ansible all_targets -i inventory.txt -m ping
-```
-
-Execute the following command (with specific ansible.cfg)
-
-```bash
-ansible all_targets -m ping
-```
-
-Execute the following command (with all)
-
-```bash
-ansible all -i inventory.txt -m ping
-```
 
 
 
@@ -116,6 +91,82 @@ ansible all_targets -i inventory.txt -m setup -a filter=distribution_version
 
 
 
+## Ping Module
+
+**Example 1 : Pinging the grouped hosts**
+
+Execute the following command (with specific inventory)
+
+```bash
+ansible all_targets -i inventory.txt -m ping
+```
+
+Execute the following command (with specific ansible.cfg)
+
+```bash
+ansible all_targets -m ping
+```
+
+Execute the following command (with all)
+
+```bash
+ansible all -i inventory.txt -m ping
+```
+
+
+**Example 2 :  Pinging the grouped hosts with NO GATHERING Parameter**
+
+Execute the following command
+
+```bash
+ANSIBLE_GATHERING=explicit ansible all -i inventory.txt -m ping
+```
+
+
+**Example 3 :  Pinging the grouped hosts with NO GATHERING Environment Variable**
+
+Execute the following commands
+
+```bash
+export ANSIBLE_GATHERING=explicit
+```
+
+```bash
+ansible all -i inventory.txt -m ping
+```
+
+
+**Example 4 :  Pinging the grouped hosts with NO GATHERING Environment Variable Script**
+
+Execute the following commands
+
+Create script : shell-script.sh with
+
+```bash
+export ANSIBLE_GATHERING=explicit
+```
+
+Configure 
+
+```bash
+chmod 755 shell-script.sh
+```
+
+Execute 
+
+```bash
+./shell-script.sh
+```
+
+Execute 
+
+```bash
+ansible all -i inventory.txt -m ping
+```
+
+
+
+
 
 ## Command Module
 
@@ -133,6 +184,18 @@ Execute the following command
 
 ```bash
 ansible all_targets -i inventory.txt -m command -a 'uptime'
+```
+
+**Example 3 : Shows hosts**
+
+Execute the following command
+
+```bash
+ansible all_targets -i inventory.txt -m command -a 'cat /etc/hosts'
+
+or
+
+ansible all_targets -i inventory.txt -a 'cat /etc/hosts'
 ```
 
 
@@ -166,6 +229,7 @@ Execute the following command
 ```bash
 ansible all_targets -i inventory.txt -m command -a 'cat temp.txt'
 ```
+
 
 **Example 3 : Show the contents of use a disk**
 

@@ -1,0 +1,21 @@
+---
+- name: Install / Configure Nginx
+  hosts: web_servers
+  become: true
+
+  tasks:
+
+  - name: Install nginx
+    yum: name=nginx state=installed
+
+  - name: Start nginx Service
+    service: name=nginx state=started enabled=yes
+
+  - name: Extract app.zip
+    unarchive: src=/root/app.zip dest=/usr/share/nginx/html remote_src=yes
+
+  - name: Replace line in index.html
+    replace:
+      path: /usr/share/nginx/html/index.html
+      regexp: This is sample html code
+      replace: This is super Ansible lab

@@ -1,0 +1,11 @@
+---
+- name: Install Package 2
+  hosts: all_targets
+  become: true
+  tasks:
+  - name: Install Package 2
+    yum: 
+      name: 
+        - vim
+        - git 
+      state: latest

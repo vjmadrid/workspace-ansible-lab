@@ -1,0 +1,18 @@
+---
+- name: Reboot and wait
+  hosts: all_targets
+  tasks:
+
+  - name: Rebooting
+    shell: sleep 2 && reboot
+    async: 1
+    poll: 0
+
+  - name: Waiting for rebooting
+    wait_for_connection:
+      delay: 15
+      sleep: 10
+      timeout: 300 
+
+  - debug:
+        msg: "{{ inventory_hostname }} is up and running"
