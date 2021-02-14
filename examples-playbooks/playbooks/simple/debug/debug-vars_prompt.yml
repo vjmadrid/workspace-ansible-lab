@@ -1,0 +1,8 @@
+---
+- hosts: all_targets
+  vars_prompt:
+    - username: acme
+      prompt: "What is your name?"
+  tasks:
+
+    - debug: msg="Username {{ username }}"

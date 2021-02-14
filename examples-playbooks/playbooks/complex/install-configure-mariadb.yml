@@ -1,5 +1,6 @@
 ---
 
+# Prepare Environment for MariaDB
 - name: Prepare Environment for MariaDB
   hosts: db_servers
   become: yes
@@ -13,36 +14,46 @@
           - firewalld
         state: installed
 
-- name: Install / Configure MariaDB
+    - name: Start firewalld Service
+      service: name=firewalld state=started enabled=yes
+
+
+# Install & Configure MariaDB
+- name: Install & Configure mariadb
   hosts: db_servers
   become: true
   vars:
     mysql_port: 3306
   tasks:
 
-    - name: Install MariaDB Package
+    - name: Install mariadb Package
       yum:
         name:
           - mariadb-server
           - MySQL-python
         state: installed
 
-    - name: Create Custom Mysql Configuration file
+    - name: Create Custom mariadb Configuration file
       copy: src=files/my.cnf dest=/etc/my.cnf
 
     - name: Start mariadb Service
       service: name=mariadb state=started enabled=yes
 
-    - name: Start firewalld Service
-      service: name=firewalld state=started enabled=yes
-
     - name: Insert firewalld Rule for mariadb 
       firewalld: port={{ mysql_port }}/tcp permanent=true state=enabled
 
-- name: Prepare Data for MariaDB
+
+# Prepare Database for MariaDB
+- name: Prepare Database for MariaDB
   hosts: db_servers
   become: true
   tasks:
+
+    - name: Create "{{ db_name }}" Database
+      mysql_db: name={{ db_name }} state=present
+
+    - name: Create "{{ db_user }}" DB User
+      mysql_user: name={{ db_user }} password={{ db_password }} priv=*.*:ALL host='172.20.1.100' state=present
 
     - name: Move db-load-script to db host
       copy:

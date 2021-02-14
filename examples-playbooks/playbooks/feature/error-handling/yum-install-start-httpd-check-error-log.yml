@@ -1,0 +1,18 @@
+---
+- name: Install & Start httpd Package
+  hosts: all_targets
+  tasks:
+
+  - name: Install httpd Package
+    yum: name=httpd state=present
+  
+  - name: Check httpd error log
+    command: cat /var/log/httpd/error_log
+    register: command_output_error_log
+
+  - name: Start httpd Service
+    service: name=httpd state=started
+    failed_when: '"Error" in register: command_output_error_log.stdout'
+  
+  - debug:
+      msg: "Install & Start httpd OK"

@@ -1,6 +1,12 @@
 ---
 - name: Ping Group 
   hosts: all_targets
+  gather_facts: true
   tasks:
+
   - name: Ping Group
     ping:
+
+  - name: Show info
+    debug:
+      msg: "Machine name: {{ ansible_hostname }}"

@@ -1,0 +1,16 @@
+---
+- name: Install Package 4 (old style using variables)
+  hosts: all_targets
+  become: true
+  vars:
+    packages:
+      - vim
+      - git
+  tasks:
+  
+  - name: Install Package 4 (old style using variables)
+    yum: 
+      name: "{{ item }}"
+      state: latest
+    with_items:
+      - "{{ packages }}"

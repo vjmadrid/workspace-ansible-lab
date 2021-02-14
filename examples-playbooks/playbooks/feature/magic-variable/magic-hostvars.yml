@@ -1,0 +1,8 @@
+---
+- hosts: all
+  gather_facts: yes
+  tasks:
+
+    - name: Print Magic Variable 'hostvars'
+      debug: 
+        msg: "{{ hostvars['ansible-target-1'].dns_server }}"

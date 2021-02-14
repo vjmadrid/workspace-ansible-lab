@@ -3,7 +3,8 @@
   hosts: all_targets
   become: true
   tasks:
-  - name: Install Common Dependdencies
+
+  - name: Install Common Dependencies
     yum: 
       name: 
         - libselinux-python

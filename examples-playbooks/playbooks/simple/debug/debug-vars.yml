@@ -1,0 +1,9 @@
+---
+- name: Print Vars 
+  hosts: all_targets
+  vars:
+    username: acme
+  tasks:
+
+    - debug: msg="Username {{ username }}"
+

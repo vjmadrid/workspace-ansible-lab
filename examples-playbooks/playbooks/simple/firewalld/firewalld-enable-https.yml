@@ -1,0 +1,15 @@
+---
+- hosts: web1
+  tasks:
+    - name: Enable HTTPS
+      firewalld:
+        source: XXX.XX.X.X
+        service: https
+        zone: internal
+        state: enabled
+        permanent: yes
+
+    - name: Reload firewalld Service
+      service:
+        name: firewalld
+        state: reloaded

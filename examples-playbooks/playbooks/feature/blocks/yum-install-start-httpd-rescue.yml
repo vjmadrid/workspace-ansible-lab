@@ -1,0 +1,12 @@
+---
+- name: Install & Start httpd Package with rescue
+  hosts: all_targets
+  become: true
+  tasks:
+
+  - name: Block Install & Start httpd
+    block:
+      - yum: name=httpd state=present
+      - service: name=httpd state=started
+    rescue:
+      - debug: msg="Playbook has failed for {{ inventory_hostname }} node"

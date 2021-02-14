@@ -1,0 +1,8 @@
+---
+- hosts: all
+  gather_facts: yes
+  tasks:
+
+    - name: Print Magic Variable 'inventory_hostname'
+      debug: 
+        msg: "{{ inventory_hostname }} {{ ansible_default_ipv4.address }}

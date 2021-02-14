@@ -1,0 +1,10 @@
+---
+- name: Remove httpd Package
+  hosts: all_targets
+  become: true
+  tasks:
+  
+  - name: Remove httpd Package
+    yum: 
+      name: httpd
+      state: absent

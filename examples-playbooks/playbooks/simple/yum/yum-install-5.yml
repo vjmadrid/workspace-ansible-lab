@@ -1,0 +1,10 @@
+---
+- name: Install Package 5 (new style with explicit list)
+  hosts: all_targets
+  become: true
+  tasks:
+  
+  - name: Install Package 5 (new style with explicit list)
+    yum: 
+      name: ['vim','git']
+      state: latest

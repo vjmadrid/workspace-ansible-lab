@@ -1,0 +1,19 @@
+---
+- hosts: all_targets
+  become: true
+  tasks:
+
+  - name: Create Template File
+    blockinfile:
+        name: "/home/ansible/template.txt"
+        block: |
+          Ejemplo de archivo personsalizado usando templates:
+
+          El nodo {{ manager.name }} tiene la IP: {{ manager.ip }}.
+          El nodo {{ managed_1.name }} tiene la IP: {{ managed_1.ip }}.
+
+  - name: Creating customized sample-template.txt in /home/ansible/sample-template.txt"
+    template: >
+      src=/home/ansible/template.txt
+      dest=/home/ansible/sample-template.txt
+      

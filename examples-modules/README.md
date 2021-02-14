@@ -178,6 +178,7 @@ Execute the following command
 ansible all_targets -i inventory.txt -m command -a 'hostname'
 ```
 
+
 **Example 2 : Shows the uptime of the grouped hosts**
 
 Execute the following command
@@ -185,6 +186,7 @@ Execute the following command
 ```bash
 ansible all_targets -i inventory.txt -m command -a 'uptime'
 ```
+
 
 **Example 3 : Shows hosts**
 
@@ -221,6 +223,7 @@ ls
 
 exit
 ```
+
 
 **Example 2 : Show the contents of the previously generated file**
 

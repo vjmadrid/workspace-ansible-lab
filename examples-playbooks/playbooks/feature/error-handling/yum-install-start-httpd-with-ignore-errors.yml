@@ -1,0 +1,22 @@
+---
+- name: Install & Start httpd Package
+  hosts: all_targets
+  tasks:
+
+  - name: Install httpd Package
+    yum: name=httpd state=present
+  
+  - name: Generate Error Ad-hoc
+    command: /bin/false
+    register: command_output_generate_error
+    ignore_errors: yes
+
+  - name: Generate Error Ad-hoc file
+    shell: "echo {{ command_output_generate_error }} > /tmp/generate_error_adhoc"
+
+  - name: Start httpd Service
+    service: name=httpd state=started
+    failed_when: '"Error" in register: command_output_error_log.stdout'
+  
+  - debug:
+      msg: "Install & Start httpd OK"

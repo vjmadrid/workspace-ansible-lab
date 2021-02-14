@@ -12,14 +12,14 @@
           - firewalld
         state: installed
 
-- name: Install / Configure Apache
+- name: Install & Configure Apache
   hosts: web_servers
   become: true
   vars:
     apache_configuration_port: 8090
   tasks:
 
-    - name: Start/Enable Services
+    - name: Start & Enable Services
       service:
         name: "{{ item }}"
         state: started
@@ -52,6 +52,22 @@
   hosts: web_servers
   become: true
   tasks:
+
+    - name: Set index.php as the default page
+      tags: "Set index.php as the default page"
+      replace:
+        path: /etc/httpd/conf/httpd.conf
+        regexp: 'DirectoryIndex index.html'
+        replace: 'DirectoryIndex index.php'
+
+    - name: http service state
+      service: name=httpd state=started enabled=yes
+
+    - name: Copy the code from repository
+      git: repo={{ repository }} dest=/var/www/html/  force=yes
+
+    - name: Creates the index.php file
+      copy: src=files/index.php dest=/var/www/html/index.php
 
     - lineinfile:
       path: /var/www/html/index.html

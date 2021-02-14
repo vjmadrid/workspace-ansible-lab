@@ -1,0 +1,15 @@
+---
+- name: Execute always
+  hosts: all_targets
+  tasks:
+  - name: Execute always
+    block:
+      - debug:
+          msg: "START Executed"
+      - name: Generate Error Ad-hoc
+        command: /bin/false
+      - debug:
+          msg: "NEVER Executed"
+    always:
+      - debug:
+          msg: "FOREVER Executed"

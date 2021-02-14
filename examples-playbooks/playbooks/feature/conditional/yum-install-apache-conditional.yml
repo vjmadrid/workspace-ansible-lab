@@ -5,11 +5,11 @@
   become: true
   tasks:
 
-  - name: Install apache2 when Ubuntu
+  - name: Install apache2 Package when Ubuntu
     package: name=apache2 state=present
     when: ansible_distribution == "Ubuntu"
   
-  - name: Install httpd when CentOS
+  - name: Install httpd Package when CentOS
     package: name=httpd state=started
     when: ansible_distribution == "CentOS"
     

@@ -1,0 +1,13 @@
+---
+- name: Install Package 3 (old style with explicit list)
+  hosts: all_targets
+  become: true
+  tasks:
+  
+  - name: Install Package 3 (old style with explicit list)
+    yum: 
+      name: "{{ item }}"
+      state: latest
+    with_items: 
+      - vim
+      - git 

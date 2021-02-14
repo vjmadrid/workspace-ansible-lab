@@ -1,0 +1,10 @@
+---
+- name: Install & Start httpd Package with Block
+  hosts: all_targets
+  become: true
+  tasks:
+
+  - name: Block Install & Start httpd
+    block:
+      - yum: name=httpd state=present
+      - service: name=httpd state=started

@@ -1,7 +1,7 @@
 ---
 - name: Install & Start httpd Package
   hosts: all_targets
-  become: true
+  any_errors_fatal: true
   tasks:
 
   - name: Install httpd Package

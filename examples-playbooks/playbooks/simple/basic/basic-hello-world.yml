@@ -2,5 +2,6 @@
 - name: Print Hellow World
   hosts: all_targets
   tasks:
+  
   - debug:
       msg: "Hello World!"

@@ -1,0 +1,7 @@
+---
+- hosts: all_targets
+  vars_files:
+    - variables.yml
+  tasks:
+
+    - debug: msg="Username {{ username }}"

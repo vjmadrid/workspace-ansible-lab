@@ -1,0 +1,8 @@
+---
+- name: Download and extract from URL
+  hosts: all_targets
+  tasks:
+  - unarchive:
+      src: https://github.com/xxx.zip
+      dest: /root
+      remote_src: yes

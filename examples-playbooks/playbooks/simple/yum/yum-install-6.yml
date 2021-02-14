@@ -1,0 +1,14 @@
+---
+- name: Install Package 6
+  hosts: all_targets
+  become: true
+  vars:
+    packages:
+      - vim
+      - git
+  tasks:
+  
+  - name: Install Package 6 (new style using variables)
+    yum: 
+      name: "{{ packages }}"
+      state: latest

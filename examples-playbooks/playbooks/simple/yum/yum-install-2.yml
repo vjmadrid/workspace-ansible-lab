@@ -1,9 +1,10 @@
 ---
-- name: Install Package 2
+- name: Install Package 2 (basic style with explicit list)
   hosts: all_targets
   become: true
   tasks:
-  - name: Install Package 2
+  
+  - name: Install Package 2 (basic style with explicit list)
     yum: 
       name: 
         - vim

@@ -1,0 +1,16 @@
+---
+- hosts: all_targets
+  gather_facts: no
+  tasks:
+
+  - shell: ls -la
+    register: shell_output
+  
+  - debug:
+      var: shell_output
+  
+  - debug:
+      var: shell_output.stat
+
+  - shell: 
+      var: echo "{{ shell_output.stat }}" > /tmp/shell_output.txt

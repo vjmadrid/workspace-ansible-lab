@@ -1,0 +1,16 @@
+---
+- name: Verify if git is intalled
+  hosts: all_targets
+  gather_facts: false
+  tasks:
+  - shell: yum list installed | grep git.x86_64
+    register: is_git_installed
+    ignore_errors: true
+
+  - debug: var=is_git_installed
+    
+  - shell: echo 'Oops, git is missing' > /tmp/is_git_installed.txt
+    when: is_git_installed.rc != 0
+
+  - shell: git --version > /tmp/is_git_installed.txt
+    when: is_git_installed.rc == 0

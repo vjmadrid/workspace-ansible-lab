@@ -1,0 +1,10 @@
+---
+- name: Remove Packages
+  hosts: all_targets
+  become: true
+  tasks:
+  
+  - name: Remove Packages
+    yum: 
+      name: vim,git 
+      state: absent

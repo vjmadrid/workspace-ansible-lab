@@ -1,9 +1,10 @@
 ---
-- name: Install Package 1
+- name: Install Package (basic style)
   hosts: all_targets
   become: true
   tasks:
-  - name: Install Package 1
+
+  - name: Install Package 1 (basic style)
     yum: 
       name: vim,git 
       state: latest

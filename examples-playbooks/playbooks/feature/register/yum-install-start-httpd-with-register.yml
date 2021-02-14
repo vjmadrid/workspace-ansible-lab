@@ -1,0 +1,30 @@
+---
+- name: Install & Start httpd Package
+  hosts: all_targets
+  become: true
+  tasks:
+
+  - name: Install httpd Package
+    yum: name=httpd state=present
+    
+  - name: Start httpd Service
+    service: name=httpd state=started
+
+  - name: Verify status httpd Service
+    command: service httpd status
+    register: command_output_status_httpd
+  
+  - name: Show status httpd Service
+    debug:
+      var: command_output_status_httpd
+
+  - debug:
+      msg: "ERROR -> Httpd Service is down"
+    when: command_output_status_httpd.stdout.find(’down’) != -1
+
+  #- name: Send Email When status is 'down'
+  #  mail:
+  #    to: xxx@acme.com
+  #    subject: Service Alert
+  #    body: Httpd Service is down
+  #  when: command_output_status_httpd.stdout.find(’down’) != -1
